@@ -35,4 +35,11 @@ Logic that allows chat between users using sockets and webrtc
 
 Creating user model : sequelize model:create --name User --attribute  firstname:string email:string password:string gender:string avatar:string
 
-This creates a m
+This creates a migration folder
+
+sequelize db:migrate for migrating the file to postgres
+# seeding with sequelize 
+
+sequelize seed:create --name users
+
+
