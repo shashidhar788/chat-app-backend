@@ -31,3 +31,8 @@ all the logics and files realted to postgres and config of database
 
 Logic that allows chat between users using sockets and webrtc
 
+## Sequelize commands to create new models and migrations
+
+Creating user model : sequelize model:create --name User --attribute  firstname:string email:string password:string gender:string avatar:string
+
+This creates a m
