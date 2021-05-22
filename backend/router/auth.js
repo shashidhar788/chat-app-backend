@@ -1,18 +1,15 @@
 const router = require('express').Router();
 
+const {login, register} = require('../controllers/authController');
 const config = require('../config/app');
 
 
 
-router.post('/login',(req,res)=>{
-    return res.send("Login screen")
-})
+//using the login and register functions methods from authController.js
+router.post('/login',login);
 
 
-router.post('/register',(req,res)=>{
-    return res.send("Registration screen")
-})
-
+router.post('/register',register);
 
 
 module.exports = router;
