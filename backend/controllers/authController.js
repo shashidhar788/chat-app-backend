@@ -3,13 +3,16 @@
 const bcrypt = require('bcrypt');
 const User = require('../models').User;
 const jwt = require('jsonwebtoken');
+const cofig = require('../config/app');
+
 
 
 
 const generateToken = (user) =>{
     //console.log('User to authenticate' ,user);
     delete user.password;
-    const token = jwt.sign(user,'secret',{expiresIn : 86400});
+    //we sign  the token with a appkey that we generate
+    const token = jwt.sign(user,cofig.appKey,{expiresIn : 86400});
     user['token'] = token;
     return user;
 }
@@ -19,6 +22,9 @@ exports.login = async (req, res) => {
 
     try {
         //find the user in database
+
+        const secret = require('crypto').randomBytes(64).toString('hex');
+        // e1d415f47d5b1485a92ee112c1dd6c169c25619d7d0ab636abf9b58482acc1a9ac2108517b3a88b0c60ed48bff258e6903bddf4f2f3412e24081db6fc6d64fd3
         const user = await User.findOne({
             //find the first user where the email matches the given email
             where: {
@@ -58,7 +64,7 @@ exports.register = async (req, res) => {
     
     try {
         const user = await User.create(req.body)
-
+        // use pass hasing is usermodel using hooks
         console.log(user);
         const plainUserObj = user.get({raw : true})
         //const userWithToken = generateToken(user); user is complex object, only plain obj allowed
