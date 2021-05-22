@@ -13,6 +13,7 @@ For business logic.
 
 # Router 
 Contains all the routes
+index.js is the entry and has the routes to login,register 
 
 # Middleware
 Form validation and other
