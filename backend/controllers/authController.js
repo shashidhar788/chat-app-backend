@@ -55,5 +55,19 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-    return res.send("Registration screen")
+    
+    try {
+        const user = await User.create(req.body)
+
+        console.log(user);
+        const plainUserObj = user.get({raw : true})
+        //const userWithToken = generateToken(user); user is complex object, only plain obj allowed
+        const userWithToken = generateToken(plainUserObj);
+        return res.send(userWithToken);
+
+    }
+    catch (error) {
+        return res.status(500).json({"Error":`${error} User email already exists! Try another email`})
+    }
+
 };
