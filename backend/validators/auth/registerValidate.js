@@ -4,7 +4,7 @@ exports.rules = () =>{
     return [
         body('firstname').notEmpty(),
         body('lastname').notEmpty(),
-        body('gender').notEmpty(),
+        //body('gender').notEmpty(),
         body('email').isEmail(),
         body('password').isLength(5)
 
