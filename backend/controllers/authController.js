@@ -14,7 +14,7 @@ const generateToken = (user) =>{
     //we sign  the token with a appkey that we generate
     const token = jwt.sign(user,cofig.appKey,{expiresIn : 86400});
     user['token'] = token;
-    return user;
+    return {...{user},...{token}};
 }
 
 exports.login = async (req, res) => {
