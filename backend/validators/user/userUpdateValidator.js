@@ -6,7 +6,7 @@ exports.rules = () =>{
         body('lastname').notEmpty(),
         //body('gender').notEmpty(),
         body('email').isEmail(),
-        body('password').optional().isLength(5)
+        body('password').optional().isLength(4)
 
     ]
     
