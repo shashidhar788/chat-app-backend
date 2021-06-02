@@ -16,7 +16,7 @@ exports.authToken = (req,res,next)=>{
         req.user = user
     })
 
-    console.log(authHeader);
+    console.log("from autToken validaton" , authHeader);
     next();
 
 }
