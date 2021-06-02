@@ -15,7 +15,8 @@ app.use(express.urlencoded({
 
 app.use(router)
 
-
+app.use(express.static(__dirname+'/public'));
+app.use(express.static(__dirname+'/uploads'));
 
 app.get('/',(req,res)=>{
     return res.send("Hello, express")
