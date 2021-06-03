@@ -17,7 +17,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    const users = await User.findAll({limit:2});
+    const users = await User.findAll({
+      order:[['id','DESC']],
+      limit:2
+    
+    });
     const chat = await Chat.create();
     
     //creating chat user table seeder
@@ -55,5 +59,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+      await Chat.bulkDelete('');
+
   }
 };
