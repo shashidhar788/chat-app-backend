@@ -105,7 +105,7 @@ exports.create = async (req,res) =>{
         //getting the new chat to send as response,
         const chatId = chat.id;
         console.log("getting chatRes for chatId: " ,chatId);
-        
+
         const chatRes = await Chat.findOne({
             where: {
                 id: chatId
@@ -154,14 +154,14 @@ exports.getRes = async (req,res) =>{
             include : [
                 {   
                     //for each chat grab all users except the above user
-                    model: User,
+                    model: ChatUser,
                     where: {
                         [Op.not]:{
                             id: req.user.id
                         }
                     }
                 },
-                //grab all the messages betwee nusers
+                //grab all the messages between users
                 {
                     model: Message,
                     
@@ -180,4 +180,68 @@ exports.getRes = async (req,res) =>{
         return res.status(500).json({status:'Error', message:e.message});
     }
 
+}
+
+//pagination
+
+exports.messages = async (req,res) =>{
+    //no of messges 
+    try{
+        var limit = 20;
+        const page = req.query.page || 1
+        const offset = page >1 ? page * limit : 0;
+
+        const messages = await Message.findAndCountAll({
+            where: {
+                chatId: req.query.id
+            },
+            limit,
+            offset
+        })
+
+        const totalPages = Math.ceil(messages.count / limit);
+
+        if(page>totalPages) return res.json({data:{messages: []}});
+
+        const result = {
+            messages: messages.rows,
+            pagination: {
+                page,
+                totalPages
+            }
+        }
+
+        return res.json(result);
+    }
+    catch(e){
+        console.log("error from /Messages", e);
+        return res.status(500).json({status:"error",message:e.message})
+    }
+
+
+}
+
+
+exports.deleteChat = async (req,res)=>{
+    try{
+        await Chat.destroy({
+            where:{
+                id: req.params.id
+            }
+        })
+        try{
+            return res.json({status:"Success",message:"chat deleted!"})
+        }
+        catch(e){
+            console.log(e);
+        }
+       
+    }
+    catch(e){
+        
+        console.log("error from /deleteChat", e);
+        return res.status(500).json({status:"error",message:e.message})
+
+
+    }
 }
