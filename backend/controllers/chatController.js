@@ -200,8 +200,8 @@ exports.messages = async (req,res) =>{
         })
 
         const totalPages = Math.ceil(messages.count / limit);
-
-        if(page>totalPages) return res.json({data:{messages: []}});
+        try{
+            if(page>totalPages) return res.json({data:{messages: []}});
 
         const result = {
             messages: messages.rows,
@@ -212,6 +212,13 @@ exports.messages = async (req,res) =>{
         }
 
         return res.json(result);
+
+        }
+        catch(e){
+            console.log(e);
+        }
+
+        
     }
     catch(e){
         console.log("error from /Messages", e);
