@@ -51,7 +51,7 @@ exports.create = async (req,res) =>{
     const {partnerID } = req.body
 
 
-    //creating a pg transaction to avoid orphan data
+    //creating a pg transaction to avoid orphan data and rolling back any unusual data
     const transac = await sequelize.transaction();
 
     try{
@@ -90,7 +90,7 @@ exports.create = async (req,res) =>{
         const chat = await Chat.create({type:'dual'},{transaction: transac});
 
         console.log("\n** CHAT CREATED  with id**\n",chat.id);
-
+    
         await ChatUser.bulkCreate([
             {
                 chatId: chat.id,
@@ -103,36 +103,49 @@ exports.create = async (req,res) =>{
         ],{transaction:transac})
         
         //getting the new chat to send as response,
-        const chatId = chat.id;
-        console.log("getting chatRes for chatId: " ,chatId);
-
-        const chatRes = await Chat.findOne({
-            where: {
-                id: chatId
-            },
-            include : [
-                {   
-                    //for each chat grab all users except the above user
-                    model: User,
-                    where: {
-                        [Op.not]:{
-                            id: req.user.id
-                        }
-                    }
-                },
-                //grab all the messages betwee nusers
-                {
-                    model: Message,
-                    
-                }
-            ]
-        });
-
+        const chatId  = chat.id
+        console.log( "?????> Getting chatRes for id: " , chatId);
         await transac.commit();
+        //getting the new chat to send as response,
+        try{
+            const chatRes = await Chat.findOne({
+                where: {
+                    id: chatId
+                },
+                include : [
+                    {   
+                        //for each chat grab all users except the above user
+                        model: ChatUser,
+                        where: {
+                            [Op.not]:{
+                                id: req.user.id
+                            }
+                        }
+                    },
+                    //grab all the messages between users
+                    {
+                        model: Message,
+                        
+                    }
+                ]
+            });
+
+            
+
+            console.log("got a new chatRes", chatRes);
+            
+            return res.send(chatRes);
+        }
+        catch(e){
+            await transac.rollback();
+            return res.status(500).json({status:'Error', message:e.message});
+        }
+
+        /* await transac.commit();
 
         console.log("created a new chat", chatRes);
         
-        return res.send(chatRes);
+        return res.send(chatRes); */
 
     }
     catch(e){
@@ -171,7 +184,7 @@ exports.getRes = async (req,res) =>{
 
 
 
-        console.log("created a new chat", chatRes);
+        console.log("got the  a new chat", {chatRes});
         
         return res.send(chatRes);
 
