@@ -3,8 +3,11 @@ const express = require('express');
 const router = require('./router/index');
 const config = require('./config/app')
 const cors = require('cors');
-
 const app = express();
+
+//http for socket server 
+
+const http = require('http')
 
 const port = config.appPort;
 app.use(cors());
@@ -22,9 +25,15 @@ app.get('/',(req,res)=>{
     return res.send("Hello, express")
 })
 
+const port = config.appPort;
+
+const server = http.createServer(app);
+const SocketServer = require('./socket');
+SocketServer(server);
 
 
-app.listen(port,()=>{
+
+server.listen(port,()=>{
     console.log(`Express server started, listening on port ${port}`)
 })
 
