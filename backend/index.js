@@ -25,12 +25,11 @@ app.get('/',(req,res)=>{
     return res.send("Hello, express")
 })
 
-const port = config.appPort;
 
 const server = http.createServer(app);
+
 const SocketServer = require('./socket');
 SocketServer(server);
-
 
 
 server.listen(port,()=>{
