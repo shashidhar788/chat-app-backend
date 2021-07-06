@@ -1,5 +1,7 @@
 const socketIO = require('socket.io');
 const { sequelize } = require('../models')
+
+const Message = require('../models').Message
 //track all the online users
 const users = new Map(); // key : user id , value : { id , sockets[] }
 
@@ -16,6 +18,7 @@ const SocketServer = (server) => {
     });
 
     io.on('connection', (socket) => {
+        
         socket.on('join', async (user) => {
             //keep track of user sockets
             var sockets = [];
@@ -79,6 +82,48 @@ const SocketServer = (server) => {
             console.log(" from socket new user joined : ", user.firstname);
 
             io.to(socket.id).emit('typing', 'Typing.....')
+
+        })
+
+        //message event from front end
+
+        socket.on('message', async (message)=>{
+            console.log("got a messge to socket from user", message);
+            //store the sockets to send the message
+            let sockets = []; 
+
+            if(users.has(message.fromUser.id)){
+                sockets = users.get(messsage.fromUser.id).sockets
+            }
+            //get all the sockets to send the message to
+            message.toUserId.forEach(id=>{
+                if(users.has(id)){
+                    sockets = [...sockets,...users.get(id).sockets];
+                }
+            });
+            //now send the message to each socket
+            try{
+                //to store the object in message table
+                const msg = {
+                    type: message.type,
+                    fromUserId: message.fromUser.id,
+                    chatId: message.chatId,
+                    message:message.message
+                }
+                //storing the message to Message table in postgres
+                await Message.create(msg);
+
+                message.User = message.fromUser;
+                message.fromUserId = message.fromUser.id
+                delete message.fromUser
+
+                sockets.forEach(socket=>{
+                    io.to(socket).emit('received',message);
+                })
+
+            }catch(e){
+
+            }
 
         })
 
