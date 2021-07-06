@@ -12,9 +12,9 @@ const generateToken = (user) =>{
     //console.log('User to authenticate' ,user);
     delete user.password;
     //we sign  the token with a appkey that we generate
-    const token = jwt.sign(user,cofig.appKey,{expiresIn : 86400});
+    const token = jwt.sign(user,cofig.appKey,{expiresIn : 8640000});
     user['token'] = token;
-    return user;
+    return {...{user},...{token}};
 }
 
 exports.login = async (req, res) => {
