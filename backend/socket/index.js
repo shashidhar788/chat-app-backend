@@ -48,6 +48,7 @@ const SocketServer = (server) => {
             const chatters = await getChatters(user.id);
 
             console.log("the query result for chatters, socket", chatters)
+            
             //notifiying his frineds that user is online
 
             for (let i = 0; i < chatters.length; i++) {
@@ -81,6 +82,10 @@ const SocketServer = (server) => {
 
             console.log(" from socket new user joined : ", user.firstname);
 
+            console.log("the users " , users);
+            console.log("users map",userSockets);
+            
+
             io.to(socket.id).emit('typing', 'Typing.....')
 
         })
@@ -93,7 +98,7 @@ const SocketServer = (server) => {
             let sockets = []; 
 
             if(users.has(message.fromUser.id)){
-                sockets = users.get(messsage.fromUser.id).sockets
+                sockets = users.get(message.fromUser.id).sockets
             }
             //get all the sockets to send the message to
             message.toUserId.forEach(id=>{
@@ -111,10 +116,11 @@ const SocketServer = (server) => {
                     message:message.message
                 }
                 //storing the message to Message table in postgres
-                await Message.create(msg);
+                const savedMessage = await Message.create(msg);
 
                 message.User = message.fromUser;
                 message.fromUserId = message.fromUser.id
+                message.message = savedMessage.message;
                 delete message.fromUser
 
                 sockets.forEach(socket=>{
@@ -136,10 +142,12 @@ const SocketServer = (server) => {
 
             console.log(" from socket a user disconnected : ");
 
+            //adding try catch as user sockets are deleted when disocnnected from all the devices
+            try{
             if (userSockets.has(socket.id)) {
                 const user = users.get(userSockets.get(socket.id));
-
-                if (user.sockets.length > 1) {
+                // delte all the user sockets
+                if (user&& user.sockets.length > 1) {
 
                     user.socket = user.sockets.filter(sock => {
 
@@ -176,8 +184,11 @@ const SocketServer = (server) => {
 
                 }
             }
+            }catch(e){
+                console.log(e);
+            }
 
-        })
+        });
 
     })
 }
