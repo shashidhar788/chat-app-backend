@@ -39,6 +39,8 @@ Creating user model : sequelize model:create --name User --attribute  firstname:
 This creates a migration folder
 
 sequelize db:migrate for migrating the file to postgres
+
+
 # seeding with sequelize 
 
 sequelize seed:create --name users

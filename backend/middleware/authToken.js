@@ -16,7 +16,7 @@ exports.authToken = (req,res,next)=>{
     jwt.verify(token,config.appKey,(err,user)=>{
         
         if(err){
-            return res.status(401).json({error:err,'message':"error in authToken.js solve the server crash"});
+            return res.status(401).json({error:err,'message':"error in authToken.js try resetting password"});
             //return res.status(401).json({error: err});
             
         }else{
@@ -26,7 +26,7 @@ exports.authToken = (req,res,next)=>{
         
     });
 
-    console.log("from autToken validaton" , authHeader);
+    //console.log("from autToken validaton" , authHeader);
     next();
     }
     catch(e){

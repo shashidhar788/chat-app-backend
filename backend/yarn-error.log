@@ -1,0 +1,58 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add multer
+
+PATH: 
+  C:\Users\Sai Venkatesh\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Sai Venkatesh\bin;C:\Program Files\Java\jdk-11.0.2\bin;C:\Python38\Scripts;C:\Python38;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\ProgramData\chocolatey\bin;C:\Program Files\Java\jdk-13.0.2\bin;C:\Program Files (x86)\GnuWin32\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\Program Files\PuTTY;C:\Program Files\Go\bin;C:\Program Files\Amazon\AWSCLIV2;C:\Users\Sai Venkatesh\AppData\Local\Microsoft\WindowsApps;C:\Users\Sai Venkatesh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Sai Venkatesh\AppData\Local\Yarn\bin;C:\Program Files\MongoDB\Server\4.4\bin;C:\Users\Sai Venkatesh\AppData\Local\atom\bin;C:\Users\Sai Venkatesh\AppData\Local\nvs;C:\Users\Sai Venkatesh\AppData\Roaming\np;C:\Program Files\nodejs";C:\Users\Sai Venkatesh\AppData\Roaming\npm;C:\Users\Sai Venkatesh\go\bin;C:\winutils\bin;C:\spark\bin;C:\jdk\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.22.5
+
+Node version: 
+  15.11.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Sai Venkatesh\OneDrive\Desktop\chat\backend\node_modules\bcrypt\lib\binding\napi-v3\bcrypt_lib.node'
+
+npm manifest: 
+  {
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "experss app",
+    "main": "index.js",
+    "scripts": {
+      "start": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "express",
+      "backend",
+      "postgres"
+    ],
+    "author": "sai",
+    "license": "ISC",
+    "dependencies": {
+      "bcrypt": "^5.0.1",
+      "body-parser": "^1.19.0",
+      "cors": "^2.8.5",
+      "decrypt": "^0.0.1",
+      "dotenv": "^9.0.2",
+      "express": "^4.17.1",
+      "express-validator": "^6.11.1",
+      "jsonwebtoken": "^8.5.1",
+      "pg": "^8.6.0",
+      "sequelize": "^6.6.2",
+      "socket.io": "^4.1.2"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.7"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

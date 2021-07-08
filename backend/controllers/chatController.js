@@ -12,38 +12,48 @@ const { sequelize } = require('../models');
 exports.index = async (req,res) =>{
     //querying the user table where id is specified id
     //reutrns 
-    const user = await User.findOne({
-        where : {
-            id: req.user.id
-        },
-        include: [
-            {   //grabbing all chats associated with this user
-                model: Chat,
-                include: [
-                    {   
-                        //for each chat grab all users except the above user
-                        model: User,
-                        where: {
-                            [Op.not]:{
-                                id: req.user.id
-                            }
-                        }
-                    },
-                    //grab all the messages betwee nusers
-                    {
-                        model: Message,
-                        limit:20,
-                        order:[['id','DESC']]
-                    }
-                    
-                ]
-            }
-        ]
-    }
-    );
 
-    //return 
-    return res.send(user.Chats);
+    try{
+
+    
+        const user = await User.findOne({
+            where : {
+                id: req.user.id
+            },
+            include: [
+                {   //grabbing all chats associated with this user
+                    model: Chat,
+                    include: [
+                        {   
+                            //for each chat grab all users except the above user
+                            model: User,
+                            where: {
+                                [Op.not]:{
+                                    id: req.user.id
+                                }
+                            }
+                        },
+                        //grab all the messages betwee nusers
+                        {
+                            model: Message,
+                            limit:20,
+                            order:[['id','DESC']]
+                        }
+                        
+                    ]
+                }
+            ]
+        }
+        );
+
+        //return 
+        return res.send(user.Chats);
+
+    }catch(e){
+        console.log(e);
+        throw e;
+        
+    }
 }
 
 
@@ -235,9 +245,24 @@ exports.messages = async (req,res) =>{
     }
     catch(e){
         console.log("error from /Messages", e);
-        return res.status(500).json({status:"error",message:e.message})
+        return res.status(500).json({status:"error",message:e.message});
     }
 
+
+}
+
+exports.imageUpload = (req,res)=>{
+
+    if(req.file){
+
+        
+        const fileToRes = req.file;
+        fileToRes.url = req.file.filename;
+        console.log("this is file to send as response ******??? " , fileToRes)
+        return res.json({"url": req.file.filename});
+    }
+
+    else return res.status(500).json({"error":"no file found"})
 
 }
 
