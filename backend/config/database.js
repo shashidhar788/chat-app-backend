@@ -7,7 +7,7 @@ module.exports = {
     "database": process.env.DB_DATABASE,
     "host": process.env.DB_HOST,
     "dialect": "postgres",
-    "logging" : false
+    "logging" : true
   },
   "test": {
     "username": process.env.DB_USER,

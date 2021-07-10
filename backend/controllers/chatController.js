@@ -58,8 +58,9 @@ exports.index = async (req,res) =>{
 
 
 exports.create = async (req,res) =>{
+    
     const {partnerID } = req.body
-
+    console.log("creating a new chat for " ,partnerID)
 
     //creating a pg transaction to avoid orphan data and rolling back any unusual data
     const transac = await sequelize.transaction();
@@ -88,6 +89,9 @@ exports.create = async (req,res) =>{
                 }
             ]
         })
+
+
+
         console.log("got user back : ", user);
         if(user && user.Chats.length > 0) {
             //user chats exists , so forbidding the creation of chat
@@ -118,7 +122,7 @@ exports.create = async (req,res) =>{
         await transac.commit();
         //getting the new chat to send as response,
         try{
-            const chatRes = await Chat.findOne({
+           /*  const chatRes = await Chat.findOne({
                 where: {
                     id: chatId
                 },
@@ -138,16 +142,48 @@ exports.create = async (req,res) =>{
                         
                     }
                 ]
+            }); */
+
+            const creator = await User.findOne({
+                where:{
+                    id: req.user.id
+                }
+            })
+
+
+            const partner = await User.findOne({
+
+                where:{
+                    id: partnerID
+                }
+
             });
 
+            const forCreator = {
+                id: chat.id,
+                type: 'dual',
+                Users: [partner],
+                Messages:[]
+
+            }
+
+            const forPartner ={
+                id: chat.id,
+                type: 'dual',
+                Users: [creator],
+                Messages:[]
+
+            }
+
             
 
-            console.log("got a new chatRes", chatRes);
+            console.log("got a new forCreator", forCreator);
+            console.log("got a new  forPartner", forPartner);
             
-            return res.send(chatRes);
+            return res.send([forCreator,forPartner]);
         }
         catch(e){
-            await transac.rollback();
+            
             return res.status(500).json({status:'Error', message:e.message});
         }
 

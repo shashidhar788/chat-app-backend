@@ -4,7 +4,7 @@ const config = require('../config/app');
 const { body } = require('express-validator');
 
 const {authToken } = require('../middleware/authToken')
-const { updateFunc } = require('../controllers/userController');
+const { updateFunc, searchUsers } = require('../controllers/userController');
 const { validate } = require('../validators/validators')
 
 const { rules: updateRules}  = require('../validators/user/userUpdateValidator');
@@ -13,6 +13,8 @@ const { rules: updateRules}  = require('../validators/user/userUpdateValidator')
 router.post('/update',[authToken,updateRules(),validate], updateFunc)
 
 //body from validation sent to ./validatrors/validate
+
+router.get('/search',authToken,searchUsers);
 
 
 

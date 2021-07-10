@@ -133,6 +133,37 @@ const SocketServer = (server) => {
 
         })
 
+        socket.on('add-friend', (chats) => {
+            try {
+                console.log("from sockets chats debug", chats[0].Users);
+                let onlineStatus = 'offline';
+                if (users.has(chats[1].Users[0].id)) {
+                    onlineStatus = 'online';
+                    chats[1].Users[0].status = 'online';
+
+                    users.get(chats[1].Users[0].id).sockets.forEach(socket => {
+                        io.to(socket).emit('new-chat', chats[0]);
+                    })
+                }
+
+
+                if (users.has(chats[0].Users[0].id)) {
+
+                    chats[0].Users[0].status = onlineStatus;
+
+                    users.get(chats[0].Users[0].id).sockets.forEach(socket => {
+                        io.to(socket).emit('new-chat', chats[1]);
+                    })
+
+                }
+            }
+            catch (err) {
+
+                console.log(err);
+            }
+        })
+
+
         socket.on('disconnect', async () => {
             //we need to find which user disconnected
 
